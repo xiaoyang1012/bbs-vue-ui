@@ -283,7 +283,7 @@ export default {
 
 .main-header {
   width: 100%;
-  max-width: 1300px;
+  max-width: 1400px;
   background: #fff;
   padding: 0;
   display: flex;

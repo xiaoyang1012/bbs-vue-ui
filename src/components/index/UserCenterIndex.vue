@@ -111,7 +111,7 @@ export default {
 #article-detail-index .content {
   margin-top: 64px;
   width: 100%;
-  max-width: 1300px;
+  max-width: 1400px;
 }
 
 @media screen and (max-width: 576px) {

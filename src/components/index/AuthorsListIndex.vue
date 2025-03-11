@@ -98,7 +98,7 @@ export default {
 #authors-list-index .content {
   margin-top: 64px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1300px;
 }
 
 #authors-list-index .ant-layout-header, .ant-layout-content {

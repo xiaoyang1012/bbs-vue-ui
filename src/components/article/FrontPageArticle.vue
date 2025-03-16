@@ -1,123 +1,20 @@
 <template>
   <div id="main-article-content">
     <a-list item-layout="vertical" size="large" :data-source="tempData">
-      <a-list-item slot="renderItem" key="item.title" slot-scope="item, index" style="cursor: pointer;"
-                   @click="routerArticleDetail(item.id)">
-        <!-- 浏览量/点赞/评论 -->
-        <template v-for="{ type, text } in actions" slot="actions">
-          <span class="collectLikeComment" :key="type">
-              <span v-if="type==='eye'">
-                  <a-icon :type="type" style="margin-right: 6px;"/>
-                  <span v-text="item.pv"></span>
-              </span>
-              <span v-if="type==='like-o'" @click.stop="pageViewsLikeComment(type, item.id, index)">
-                  <span v-if="item.articleCountDTO.isLike" :style="{color: $store.state.themeColor}">
-                      <a-icon :type="type" style="margin-right: 6px"/>
-                      <span v-text="item.articleCountDTO.likeCount"></span>
-                  </span>
-                  <span v-if="!item.articleCountDTO.isLike">
-                      <a-icon :type="type" style="margin-right: 8px"/>
-                      <span v-text="item.articleCountDTO.likeCount"></span>
-                  </span>
-              </span>
-              <span v-if="type==='message'" @click.stop="routerArticleDetailToComment(item.id)">
-                  <a-icon :type="type" style="margin-right: 6px;"/>
-                  <span v-text="item.articleCountDTO.commentCount"></span>
-              </span>
-              <span
-                  v-if="(($store.state.isManage && isAdminAudit) || $store.state.userId === item.createUser) && type==='ellipsis'"
-                  @click.stop>
-                <a-dropdown :placement="'bottomCenter'" :trigger="['click']">
-                  <a-menu slot="overlay">
-                    <!-- 审核通过 -->
-                    <a-menu-item key="articlePass"
-                                 v-if="($store.state.isManage && isAdminAudit) && (item.state === -1 || item.state !== 1)"
-                                 @click="updateState(item.id, item.state, 1)">
-                      {{ ' ' + $t("common.pass") }}
-                    </a-menu-item>
-                    <!-- 审核拒绝 -->
-                    <a-menu-item key="articleReject"
-                                 v-if="($store.state.isManage && isAdminAudit) && (item.state === -1 || item.state !== 0)"
-                                 @click="updateState(item.id, item.state, 0)">
-                      <span style="color: red">{{ ' ' + $t("common.reject") }}</span>
-                    </a-menu-item>
-                    <!-- 文章置顶 -->
-                    <a-menu-item key="articleNotTop" v-if="$store.state.isManage && isAdminAudit && !item.top"
-                                 @click="articleTop(item.id)">
-                      <span style="color: #1869ff">{{ ' ' + $t("common.isTop") }}</span>
-                    </a-menu-item>
-                    <!-- 文章取消置顶 -->
-                    <a-menu-item key="articleTop" v-if="$store.state.isManage && isAdminAudit && item.top"
-                                 @click="articleNotTop(item.id)">
-                      <span style="color: #eb2f96">{{ ' ' + $t("common.isNotTop") }}</span>
-                    </a-menu-item>
-                    <!-- 文章编辑 -->
-                    <a-menu-item key="articleEdit" v-if="$store.state.userId === item.createUser"
-                                 @click="routerArticleEdit(item.id)">
-                      <span style="color: #722ed1">{{ ' ' + $t("common.edit") }}</span>
-                    </a-menu-item>
-                    <!-- 文章删除 -->
-                    <a-menu-item key="articleDel" v-if="$store.state.userId === item.createUser"
-                                 @click="articleDelete(item.id, index)">
-                      <span style="color: red">{{ ' ' + $t("common.delete") }}</span>
-                    </a-menu-item>
-                  </a-menu>
-                  <div class="options">
-                    <a-icon :type="type"/>
-                  </div>
-                </a-dropdown>
-              </span>
-          </span>
-        </template>
-        <!-- 标签/题图 -->
-        <div slot="extra" class="label-titleMap">
-          <div slot="title">
-            <a v-for="(label, index) in item.labelDTOS" :key="item.labelName" style="float: right"
-               @click.stop="routerLabelToArticle(label.id)">
-              <span class="label-name">{{ label.labelName }}</span>
-              <a-divider v-if="index !== 0" type="vertical"/>
-            </a>
-          </div>
-          <div>
-            <img style="padding-top: 10px" :width="$store.state.collapsed ? 80 : 150" alt="logo" v-if="item.titleMap"
-                 :src="item.titleMap"/>
-          </div>
-        </div>
+      <a-list-item slot="renderItem" key="item.title" slot-scope="item, index" style="cursor: pointer;" @click="routerArticleDetail(item.id)">
         <!-- 用户/标题 -->
         <a-list-item-meta :description="item.title">
           <a-avatar slot="avatar" :src="item.picture ? item.picture : require('@/assets/img/default_avatar.png')"
                     @click.stop="routerUserCenter(item.createUser)"/>
           <a slot="title" class="username" @click.stop="routerUserCenter(item.createUser)">
             <div class="left">
-              <span slot="title" style="padding-right: 2px;"> {{ item.createUserName }} </span>
-              <img :src="require('@/assets/img/level/' + item.level + '.svg')" alt="" @click.stop="routerBook"/>
-              <small style="color: #b5b9b9; padding-left: 10px" v-text="$utils.showtime(item.createTime)"></small>
-              <!-- 用户中心 -->
-              <div v-if="isUserCenter && ($store.state.userId === userId || $store.state.isManage)">
-                <small style="color: #faad14; padding-left: 10px" v-if="item.state === -1">{{
-                    $t("common.pendingReview")
-                  }}</small>
-                <small style="color: red; padding-left: 10px" v-if="item.state === 0">{{
-                    $t("common.auditReviewRejected")
-                  }}</small>
-                <small style="color: #3eaf7c; padding-left: 10px" v-if="item.state === 1">{{
-                    $t("common.auditApproved")
-                  }}</small>
-              </div>
+              <span slot="title" style="padding-right: 2px;"> {{ item.createdUserName }} </span>
+              <small style="color: #b5b9b9; padding-left: 10px" v-text="$utils.showtime(item.createdAt)"></small>
             </div>
-            <!-- 置顶图标 -->
-            <a-tooltip placement="left">
-              <template slot="title">
-                {{ $t("common.top") }}
-              </template>
-              <a-icon type="fire" :style="{color: $store.state.themeColor}" v-if="item.top"/>
-              <!--              <a-icon type="thunderbolt" :style="{color: $store.state.themeColor}" v-if="item.top" />-->
-              <!--              <i class="iconfont icon-right-triangle" :style="{color: $store.state.themeColor}" v-if="item.top"></i>-->
-            </a-tooltip>
           </a>
         </a-list-item-meta>
         <div class="article-content">
-          {{ item.content }}
+          {{ item.description }}
         </div>
       </a-list-item>
     </a-list>
@@ -155,117 +52,9 @@ export default {
   },
 
   methods: {
-    // 浏览点赞评论按钮的点击操作
-    pageViewsLikeComment(type, articleId, index) {
-      // 浏览量
-      if (type === 'eye') {
-        console.log("浏览量")
-      }
-      // 点赞
-      if (type === 'like-o') {
-        userService.updateLikeState({articleId: articleId})
-            .then(() => {
-              // this.$emit("refresh");
-              let isLike = this.tempData[index].articleCountDTO.isLike;
-              // 取消点赞操作
-              if (isLike) {
-                this.tempData[index].articleCountDTO.likeCount--;
-              } else {
-                this.tempData[index].articleCountDTO.likeCount++;
-              }
-              this.tempData[index].articleCountDTO.isLike = !isLike;
-            })
-            .catch(err => {
-              this.$message.error(err.desc);
-            });
-      }
-      // 评论
-      if (type === 'message') {
-        console.log("评论")
-      }
-    },
-
-    // 修改文章审批状态
-    updateState(articleId, state, toState) {
-      this.$confirm({
-        centered: true,
-        title: this.$t("common.confirmReject"),
-        onOk: () => {
-          articleService.updateState({id: articleId, state: toState})
-              .then(() => {
-                this.tempData = this.tempData.filter(article => article.id !== articleId);
-                this.$emit("updateData", this.tempData);
-                this.$message.success(this.$t("common.approvalSuccessed"));
-              })
-              .catch(err => {
-                this.$message.error(err.desc);
-              });
-        },
-      });
-    },
-
-    // 文章置顶
-    articleTop(articleId) {
-      this.$confirm({
-        centered: true,
-        title: this.$t("common.confirmTop"),
-        onOk: () => {
-          articleService.articleTop({id: articleId, top: true})
-              .then(() => {
-                this.$emit("articleTopCallBack");
-                this.$message.success(this.$t("common.topSuccessed"));
-              })
-              .catch(err => {
-                this.$message.error(err.desc);
-              });
-        },
-      });
-    },
-
-    // 文章取消置顶
-    articleNotTop(articleId) {
-      this.$confirm({
-        centered: true,
-        title: this.$t("common.confirmNotTop"),
-        onOk: () => {
-          articleService.articleTop({id: articleId, top: false})
-              .then(() => {
-                this.$emit("articleTopCallBack");
-                this.$message.success(this.$t("common.notTopSuccessed"));
-              })
-              .catch(err => {
-                this.$message.error(err.desc);
-              });
-        },
-      });
-    },
-
-    // 删除
-    articleDelete(articleId, index) {
-      this.$confirm({
-        centered: true,
-        title: this.$t("common.deleteArticleTitle"),
-        onOk: () => {
-          articleService.articleDelete(articleId)
-              .then(() => {
-                this.tempData = this.tempData.filter(article => article.id !== articleId);
-              })
-              .catch(err => {
-                this.$message.error(err.desc);
-              });
-        },
-      });
-    },
-
     // 路由到文章详情页面
     routerArticleDetail(articleId) {
       let routeData = this.$router.resolve("/detail/" + articleId);
-      window.open(routeData.href, '_blank');
-    },
-
-    // 路由到文章详情页面（评论处）
-    routerArticleDetailToComment(articleId) {
-      let routeData = this.$router.resolve("/detail/" + articleId + '#article-comment-all');
       window.open(routeData.href, '_blank');
     },
 

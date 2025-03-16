@@ -10,8 +10,8 @@
                  :style="$store.state.collapsed ? '' : 'border-right: 20px solid #f0f2f5'">
             <CustomEmpty v-if="spinning"/>
             <div v-else>
-              <!-- 轮播图 -->
-              <SlideShow v-if="!$store.state.collapsed && $store.state.isCarousel"/>
+<!--              &lt;!&ndash; 轮播图 &ndash;&gt;-->
+<!--              <SlideShow v-if="!$store.state.collapsed && $store.state.isCarousel"/>-->
               <a-row v-if="!$store.state.collapsed && $store.state.isCarousel">
                 <a-col :span="24" style="height: 2px;"/>
               </a-row>
@@ -24,16 +24,17 @@
                     @initArticles="initArticles"/>
               </div>
               <!-- 文章列表（管理员） -->
-              <FrontPageArticle v-if="$store.state.isManage && !spinning"
-                                :finish="finish"
-                                :hasNext="hasNext"
-                                :data="listData"
-                                :isAdminAudit="true"
-                                @updateData="updateData"
-                                @articleTopCallBack="articleTopCallBack"
-                                @refresh="refresh"
-                                style="background: #fff;"/>
+<!--              <FrontPageArticle v-if="$store.state.isManage && !spinning"-->
+<!--                                :finish="finish"-->
+<!--                                :hasNext="hasNext"-->
+<!--                                :data="listData"-->
+<!--                                :isAdminAudit="true"-->
+<!--                                @updateData="updateData"-->
+<!--                                @articleTopCallBack="articleTopCallBack"-->
+<!--                                @refresh="refresh"-->
+<!--                                style="background: #fff;"/>-->
               <!-- 文章列表（普通） -->
+              <!-- v-if="!$store.state.isManage && !spinning" -->
               <FrontPageArticle v-if="!$store.state.isManage && !spinning"
                                 :finish="finish"
                                 :hasNext="hasNext"
@@ -108,7 +109,7 @@ export default {
       listData: [],
       hasNext: true,
       finish: false,
-      params: {currentPage: 1, pageSize: 12},
+      params: {page: 1, size: 12},
       searchContent: '',
     };
   },
@@ -116,7 +117,7 @@ export default {
   methods: {
     // 加载更多（滚动加载）
     loadMore() {
-      this.params.currentPage++;
+      this.params.page++;
       if (this.$store.state.articleCheck === 'enable') {
         this.getArticleList(this.params, true);
       }
@@ -153,21 +154,23 @@ export default {
     // 获取文章列表信息
     getArticleList(params, isLoadMore) {
       if (!isLoadMore) {
-        this.params.currentPage = 1;
+        this.params.page = 1;
       }
       this.finish = false;
       articleService.getArticleList(params)
           .then(res => {
+            console.log(JSON.stringify(res));
             if (isLoadMore) {
-              this.listData = this.listData.concat(res.data.list);
-              this.hasNext = res.data.list.length !== 0;
+              this.listData = this.listData.concat(res.data.records);
+              this.hasNext = res.data.records.length !== 0;
             } else {
-              this.listData = res.data.list;
+              this.listData = res.data.records;
             }
             this.spinning = false;
             this.finish = true;
           })
           .catch(err => {
+            console.log('err=' + JSON.stringify(err));
             this.finish = true;
             this.$message.error(err.desc);
           });
@@ -176,16 +179,16 @@ export default {
     // 获取待审核的文章
     getPendingReviewArticles(params, isLoadMore) {
       if (!isLoadMore) {
-        this.params.currentPage = 1;
+        this.params.page = 1;
       }
       this.finish = false;
       articleService.getPendingReviewArticles(params)
           .then(res => {
             if (isLoadMore) {
-              this.listData = this.listData.concat(res.data.list);
-              this.hasNext = res.data.list.length !== 0;
+              this.listData = this.listData.concat(res.data.records);
+              this.hasNext = res.data.records.length !== 0;
             } else {
-              this.listData = res.data.list;
+              this.listData = res.data.records;
             }
             this.spinning = false;
             this.finish = true;
@@ -199,16 +202,16 @@ export default {
     // 获取禁用的文章
     getDisabledArticles(params, isLoadMore) {
       if (!isLoadMore) {
-        this.params.currentPage = 1;
+        this.params.page = 1;
       }
       this.finish = false;
       articleService.getDisabledArticles(params)
           .then(res => {
             if (isLoadMore) {
-              this.listData = this.listData.concat(res.data.list);
-              this.hasNext = res.data.list.length !== 0;
+              this.listData = this.listData.concat(res.data.records);
+              this.hasNext = res.data.records.length !== 0;
             } else {
-              this.listData = res.data.list;
+              this.listData = res.data.records;
             }
             this.spinning = false;
             this.finish = true;
@@ -221,7 +224,7 @@ export default {
 
     // 刷新列表
     refresh() {
-      this.params = {currentPage: 1, pageSize: 10};
+      this.params = {page: 1, size: 10};
       this.getArticleList(this.params);
     },
 

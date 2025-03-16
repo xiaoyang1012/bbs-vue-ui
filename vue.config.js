@@ -4,7 +4,14 @@ const createThemeColorReplacerPlugin = require("./src/config/config");
 const vueConfig = {
     // 开发环境的跨域配置
     devServer: {
-        proxy: "https://bbs.nanshengbbs.top",
+        host:'0.0.0.0',
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8080',
+                ws: true,
+                changeOrigin: true,
+            }
+        },
         disableHostCheck: true,
         port: 443
     },

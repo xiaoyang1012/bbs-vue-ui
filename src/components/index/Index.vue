@@ -23,18 +23,6 @@
                     ref="child"
                     @initArticles="initArticles"/>
               </div>
-              <!-- 文章列表（管理员） -->
-<!--              <FrontPageArticle v-if="$store.state.isManage && !spinning"-->
-<!--                                :finish="finish"-->
-<!--                                :hasNext="hasNext"-->
-<!--                                :data="listData"-->
-<!--                                :isAdminAudit="true"-->
-<!--                                @updateData="updateData"-->
-<!--                                @articleTopCallBack="articleTopCallBack"-->
-<!--                                @refresh="refresh"-->
-<!--                                style="background: #fff;"/>-->
-              <!-- 文章列表（普通） -->
-              <!-- v-if="!$store.state.isManage && !spinning" -->
               <FrontPageArticle v-if="!$store.state.isManage && !spinning"
                                 :finish="finish"
                                 :hasNext="hasNext"
@@ -109,7 +97,7 @@ export default {
       listData: [],
       hasNext: true,
       finish: false,
-      params: {page: 1, size: 12},
+      params: {page: 1, size: 20},
       searchContent: '',
     };
   },

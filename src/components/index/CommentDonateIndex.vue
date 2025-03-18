@@ -9,8 +9,6 @@
           <a-row>
             <a-col :span="24" style="height: 10px;"/>
           </a-row>
-          <!-- 友情捐赠 -->
-          <FriendDonate style="background: #fff;"/>
         </main>
       </a-layout-content>
       <FooterButtons v-if="!$store.state.collapsed"/>
@@ -22,7 +20,6 @@
   import IndexHeader from "@/components/index/head/IndexHeader";
   import FooterButtons from "@/components/utils/FooterButtons";
   import LatestComment from "@/components/right/LatestComment";
-  import FriendDonate from "@/components/right/FriendDonate";
 
   export default {
     name: "",
@@ -30,9 +27,8 @@
     components: {
       IndexHeader,
       FooterButtons,
-      LatestComment,
-      FriendDonate,
-    },
+      LatestComment
+    }
 
   }
 </script>

@@ -17,18 +17,18 @@
     </div>
 
     <!-- 评论 -->
-    <div class="comment-div">
-      <a-badge class="badge" :count="data.commentCount || 100" :overflow-count="999" :number-style="{
-        backgroundColor: '#c2c8d1',
-        boxShadow: '0 0 0 1px #c2c8d1 inset',
-      }">
-        <a href="#article-comment-all">
-          <div class="comment-icon-container" style="background: #fff;">
-            <i class="iconfont icon-comment" style="color: #8a919f;"></i>
-          </div>
-        </a>
-      </a-badge>
-    </div>
+<!--    <div class="comment-div">-->
+<!--      <a-badge class="badge" :count="data.commentCount || 100" :overflow-count="999" :number-style="{-->
+<!--        backgroundColor: '#c2c8d1',-->
+<!--        boxShadow: '0 0 0 1px #c2c8d1 inset',-->
+<!--      }">-->
+<!--        <a href="#article-comment-all">-->
+<!--          <div class="comment-icon-container" style="background: #fff;">-->
+<!--            <i class="iconfont icon-comment" style="color: #8a919f;"></i>-->
+<!--          </div>-->
+<!--        </a>-->
+<!--      </a-badge>-->
+<!--    </div>-->
 
   </div>
 </template>

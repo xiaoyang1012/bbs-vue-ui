@@ -1,38 +1,33 @@
 <template>
   <div>
     <a-row class="about_nsbbs_img">
-      <img src="@/assets/img/about-nsbbs.png" style="width: 100%;">
+      <img src="@/assets/img/index-bg.png" style="width: 100%; height: 130px">
     </a-row>
     <a-row>
       <a-col :span="24" style="position: relative; top: -25px; text-align: center">
-        <a-avatar :size="80" :src="require('@/assets/img/nan.jpg')"/>
+        <a-avatar :size="80" :src="require('@/assets/img/yang.png')"/>
       </a-col>
       <a-col :span="24" style="text-align: center">
         <div style="line-height: 28px; padding: 0 10px 10px 10px;">
-          {{ $t('common.projectIntro') }}
+          苟有恒，何必三更眠五更起；最无益，莫过一日曝十日寒
         </div>
       </a-col>
-      <a-divider style="font-size: 12px;">{{ $t("common.commonCount") }}</a-divider>
+      <a-divider style="font-size: 12px;">本站统计</a-divider>
       <a-col :span="24" style="text-align: center">
-        <a-col :span="6">
-          <p>{{ $t("common.article") }}</p>
-          <a-badge :overflow-count="9999999" :count="data.articleCount"
+        <a-col :span="8">
+          <p>文章</p>
+          <a-badge :overflow-count="9999999" :count="data.articleCount || 5677"
                    :number-style="{ backgroundColor: $store.state.themeColor }"/>
         </a-col>
-        <a-col :span="6">
-          <p>{{ $t("common.comment") }}</p>
-          <a-badge :overflow-count="9999999" :count="data.commentCount"
+        <a-col :span="8">
+          <p>点赞</p>
+          <a-badge :overflow-count="9999999" :count="data.commentCount || 5654"
                    :number-style="{ backgroundColor: $store.state.themeColor }"/>
         </a-col>
-        <a-col :span="6">
-          <p>{{ $t("common.visit") }}</p>
-          <a-badge :overflow-count="9999999" :count="data.visitCount"
+        <a-col :span="8">
+          <p>访客</p>
+          <a-badge :overflow-count="9999999" :count="data.visitCount || 543"
                    :number-style="{ backgroundColor: $store.state.themeColor }"/>
-        </a-col>
-        <a-col :span="6">
-          <p>{{ $t("common.carousel") }}</p>
-            <a-switch default-checked @change="carouselSwitch" v-if="$store.state.isCarousel"/>
-            <a-switch @change="carouselSwitch" v-else/>
         </a-col>
       </a-col>
     </a-row>

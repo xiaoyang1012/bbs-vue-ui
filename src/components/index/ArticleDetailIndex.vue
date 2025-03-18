@@ -19,11 +19,11 @@
               style="background: #fff;" />
             <br />
             <!-- 文章评论 -->
-            <ArticleComment
-              @refresh="refresh"
-              :articleUserId="userId"
-              :articleCommentCount="articleCommentCount"
-              style="background: #fff" />
+<!--            <ArticleComment-->
+<!--              @refresh="refresh"-->
+<!--              :articleUserId="userId"-->
+<!--              :articleCommentCount="articleCommentCount"-->
+<!--              style="background: #fff" />-->
             <a-row>
               <a-col :span="24" style="height: 10px;" />
             </a-row>

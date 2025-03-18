@@ -21,13 +21,13 @@ export default {
      * @argument {DomElement} el 需要监听滚动事件的dom元素（容器）
      * @argument {Number} height 高度
      */
-    el.onscroll = ({target}) => {
+    el.onscroll = ({ target }) => {
       /**
        * scrollTop:滚动条滚动距离;
        * scrollHeight:文档内容实际高度（包括超出视窗的溢出部分）;
        * clientHeight:窗口可视范围高度
        */
-      const {scrollTop, scrollHeight, clientHeight} = target;
+      const { scrollTop, scrollHeight, clientHeight } = target;
       /**
        * @property hasNext 列表是否还有没加载完的（是否已经加载完最后一项），是后台返回的结果
        * @property finish 上个请求是否完成，完成后才可以进行下个请求
@@ -53,7 +53,7 @@ export default {
     if (!isValidDate) {
       window.console.error("不是有效日期格式");
     }
-    const formatDate = function (date) {
+    const formatDate = function(date) {
       let today = new Date(date);
       let year = today.getFullYear();
       let month = ("0" + (today.getMonth() + 1)).slice(-2);
@@ -70,17 +70,32 @@ export default {
     }
 
     return (
-        (dayTime === 0 && ((secondTime < 60 && "刚刚") ||
-            (secondTime < 120 && "1分钟前") ||
-            (secondTime < 3600 && Math.floor(secondTime / 60) + "分钟前") ||
-            (secondTime < 7200 && "1小时前") ||
-            (secondTime < 86400 && Math.floor(secondTime / 3600) + "小时前"))) ||
-        (dayTime === 1 && "昨天") ||
-        (dayTime < 7 && dayTime + "天前") ||
-        (dayTime < 30 && Math.floor(dayTime / 7) + "周前") ||
-        (dayTime < 365 && Math.floor(dayTime / 30) + "月前") ||
-        (dayTime >= 365 && Math.floor(dayTime / 365) + "年前")
+      (dayTime === 0 && ((secondTime < 60 && "刚刚") ||
+        (secondTime < 120 && "1分钟前") ||
+        (secondTime < 3600 && Math.floor(secondTime / 60) + "分钟前") ||
+        (secondTime < 7200 && "1小时前") ||
+        (secondTime < 86400 && Math.floor(secondTime / 3600) + "小时前"))) ||
+      (dayTime === 1 && "昨天") ||
+      (dayTime < 7 && dayTime + "天前") ||
+      (dayTime < 30 && Math.floor(dayTime / 7) + "周前") ||
+      (dayTime < 365 && Math.floor(dayTime / 30) + "月前") ||
+      (dayTime >= 365 && Math.floor(dayTime / 365) + "年前")
     );
+  },
+
+  timestampFormat(time) {
+    const timestr = new Date(parseInt(time));
+    const year = timestr.getFullYear();
+    const month = timestr.getMonth() + 1;
+    const date = timestr.getDate();
+    const hour = timestr.getHours();
+    const minute = timestr.getMinutes();
+    const second = timestr.getSeconds();
+    return year + "-" + this.formatTime(month) + "-" + this.formatTime(date) + " " + this.formatTime(hour) + ":" + this.formatTime(minute) + ":" + this.formatTime(second);
+  },
+
+  formatTime(time) {
+    return time && time < 10 ? `0${time}` : time;
   },
 
   // 将h标签转化为ul>li的形式
@@ -91,21 +106,21 @@ export default {
       return null;
     }
     const levelStack = [];
-    let result = '';
-    const addStartUL = function () {
-      result += '<ul class="catalog-list">';
+    let result = "";
+    const addStartUL = function() {
+      result += "<ul class=\"catalog-list\">";
     };
-    const addEndUL = function () {
-      result += '</ul>\n';
+    const addEndUL = function() {
+      result += "</ul>\n";
     };
-    const addLI = function (index, itemText) {
-      result += '<li><a class="toc-link' + '-#' + index + '" href="#' + index + '">' + itemText + "</a></li>\n";
+    const addLI = function(index, itemText) {
+      result += "<li><a class=\"toc-link" + "-#" + index + "\" href=\"#" + index + "\">" + itemText + "</a></li>\n";
     };
-    data.forEach(function (item, index) {
+    data.forEach(function(item, index) {
       // 获取a标签的id值
-      let a_id = item.replace(/<a id="(.*?)"([^\[]*)/g, '$1').replace(/<[hH][1-6]>/g, '');
+      let a_id = item.replace(/<a id="(.*?)"([^\[]*)/g, "$1").replace(/<[hH][1-6]>/g, "");
       // 匹配h标签的文字
-      const itemText = item.replace(/<[^>]+>/g, '');
+      const itemText = item.replace(/<[^>]+>/g, "");
       // 匹配h?标签<h?>
       const itemLabel = item.match(/<\w+?>/)[0];
       // 判断数组里有无<h?>
@@ -137,6 +152,6 @@ export default {
 
     // 去掉回车换行
     return result.replace(/\r?\n|\r/g, "");
-  },
+  }
 
 };

@@ -2,7 +2,7 @@
   <div id="left-buttons">
     <!-- 点赞 -->
     <div class="like-div">
-      <a-badge class="badge" :count="data.likeCount" :overflow-count="999" :number-style="data.isLike ? {
+      <a-badge class="badge" :count="data.likeCount || 100" :overflow-count="999" :number-style="data.isLike ? {
         backgroundColor: $store.state.themeColor,
         boxShadow: '0 0 0 1px ' + $store.state.themeColor+ ' inset',
       } : {
@@ -18,7 +18,7 @@
 
     <!-- 评论 -->
     <div class="comment-div">
-      <a-badge class="badge" :count="data.commentCount" :overflow-count="999" :number-style="{
+      <a-badge class="badge" :count="data.commentCount || 100" :overflow-count="999" :number-style="{
         backgroundColor: '#c2c8d1',
         boxShadow: '0 0 0 1px #c2c8d1 inset',
       }">

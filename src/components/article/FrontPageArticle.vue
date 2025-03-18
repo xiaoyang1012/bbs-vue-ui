@@ -9,9 +9,13 @@
             <div class="description">{{ item.description }}</div>
             <div class="foot">
               <div class="foot-user">{{ item.createdUserName }}</div>
+              <div style="flex: 1"></div>
+              <div class="foot-create" v-text="$utils.showtime(item.createdAt)"></div>
             </div>
           </div>
-          <div class="article-content-right"></div>
+          <div v-if="item && item.pic" class="article-content-right">
+            <img :src="item.pic" alt="" class="article-content-right">
+          </div>
         </div>
       </a-list-item>
     </a-list>
@@ -142,6 +146,7 @@ export default {
       /* 兼容性处理 */
       word-break: break-word;
       max-height: 3em; /* line-height × 行数 */
+      height: 42px;
     }
 
     .foot {
@@ -149,10 +154,14 @@ export default {
       height: 20px;
       display: flex;
       margin-top: 10px;
-      color: #f0f2f5;
+      color: #b5b9b9;
 
       .foot-user {
 
+      }
+
+      .foot-create {
+        margin-right: 8px;
       }
     }
   }

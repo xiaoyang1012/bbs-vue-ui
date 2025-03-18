@@ -4,7 +4,7 @@ export default {
     // 获取文章
     getArticleList(params) {
         return new Promise((resolve, reject) => {
-            axios.post("/api/heepseek/article/page", {params})
+            axios.post("/api/heepseek/article/page", params)
                 .then((res) => resolve(res))
                 .catch((err) => reject(err));
         });

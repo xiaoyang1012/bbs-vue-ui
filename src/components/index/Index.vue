@@ -212,7 +212,7 @@ export default {
 
     // 刷新列表
     refresh() {
-      this.params = {page: 1, size: 10};
+      this.params = {page: 1, size: 20};
       this.getArticleList(this.params);
     },
 

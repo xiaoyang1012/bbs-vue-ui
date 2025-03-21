@@ -9,24 +9,24 @@
       </a-col>
       <a-col :span="24" style="text-align: center">
         <div style="line-height: 28px; padding: 0 10px 10px 10px;">
-          苟有恒，何必三更眠五更起；最无益，莫过一日曝十日寒
+          苟有恒，何必三更眠五更起<br/>最无益，莫过一日曝十日寒
         </div>
       </a-col>
       <a-divider style="font-size: 12px;">本站统计</a-divider>
       <a-col :span="24" style="text-align: center">
         <a-col :span="8">
           <p>文章</p>
-          <a-badge :overflow-count="9999999" :count="data.articleCount || 5677"
+          <a-badge :overflow-count="9999999" :count="data.article || 0"
                    :number-style="{ backgroundColor: $store.state.themeColor }"/>
         </a-col>
         <a-col :span="8">
           <p>点赞</p>
-          <a-badge :overflow-count="9999999" :count="data.commentCount || 5654"
+          <a-badge :overflow-count="9999999" :count="data.like || 0"
                    :number-style="{ backgroundColor: $store.state.themeColor }"/>
         </a-col>
         <a-col :span="8">
-          <p>访客</p>
-          <a-badge :overflow-count="9999999" :count="data.visitCount || 543"
+          <p>浏览</p>
+          <a-badge :overflow-count="9999999" :count="data.view || 0"
                    :number-style="{ backgroundColor: $store.state.themeColor }"/>
         </a-col>
       </a-col>
@@ -48,7 +48,7 @@ export default {
 
   methods: {
     getArticleCommentVisitTotal() {
-      articleService.getArticleCommentVisitTotal()
+      articleService.getWebsiteIndexCount()
           .then(res => {
             this.data = res.data;
           })

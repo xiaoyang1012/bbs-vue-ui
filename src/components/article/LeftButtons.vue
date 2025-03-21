@@ -2,7 +2,7 @@
   <div id="left-buttons">
     <!-- 点赞 -->
     <div class="like-div">
-      <a-badge class="badge" :count="data.likeCount || 100" :overflow-count="999" :number-style="data.isLike ? {
+      <a-badge class="badge" :count="likeCount || 0" :overflow-count="999" :number-style="isLike ? {
         backgroundColor: $store.state.themeColor,
         boxShadow: '0 0 0 1px ' + $store.state.themeColor+ ' inset',
       } : {
@@ -11,64 +11,71 @@
       }">
         <div @click="likeAction" class="like-icon-container" style="background: #fff;">
           <i class="iconfont icon-like"
-             :style="data.isLike ? 'color:' + $store.state.themeColor : 'color: #8a919f;'"></i>
+             :style="isLike ? 'color:' + $store.state.themeColor : 'color: #8a919f;'"></i>
         </div>
       </a-badge>
     </div>
 
     <!-- 评论 -->
-<!--    <div class="comment-div">-->
-<!--      <a-badge class="badge" :count="data.commentCount || 100" :overflow-count="999" :number-style="{-->
-<!--        backgroundColor: '#c2c8d1',-->
-<!--        boxShadow: '0 0 0 1px #c2c8d1 inset',-->
-<!--      }">-->
-<!--        <a href="#article-comment-all">-->
-<!--          <div class="comment-icon-container" style="background: #fff;">-->
-<!--            <i class="iconfont icon-comment" style="color: #8a919f;"></i>-->
-<!--          </div>-->
-<!--        </a>-->
-<!--      </a-badge>-->
-<!--    </div>-->
+    <!--    <div class="comment-div">-->
+    <!--      <a-badge class="badge" :count="data.commentCount || 100" :overflow-count="999" :number-style="{-->
+    <!--        backgroundColor: '#c2c8d1',-->
+    <!--        boxShadow: '0 0 0 1px #c2c8d1 inset',-->
+    <!--      }">-->
+    <!--        <a href="#article-comment-all">-->
+    <!--          <div class="comment-icon-container" style="background: #fff;">-->
+    <!--            <i class="iconfont icon-comment" style="color: #8a919f;"></i>-->
+    <!--          </div>-->
+    <!--        </a>-->
+    <!--      </a-badge>-->
+    <!--    </div>-->
 
   </div>
 </template>
 
 <script>
 
-import userService from "@/service/userService";
 import articleService from "@/service/articleService";
 
 export default {
-
   data() {
     return {
-      data: {},
-    }
+      likeCount: 0,
+      isLike: false
+    };
   },
 
   methods: {
     // 获取文章一些统计数据
     getArticleCountById() {
-      articleService.getArticleCountById({id: this.$route.params.id})
-          .then((res) => {
-            this.data = res.data;
-            this.$emit("articleCommentCountFn", res.data.commentCount);
-          })
-          .catch(err => {
-            // this.$message.error(err.desc);
-          });
+      articleService.getArticleCountById(this.$route.params.id)
+        .then((res) => {
+          this.likeCount = res.data;
+        })
+        .catch(err => {
+          // this.$message.error(err.desc);
+        });
     },
 
     // 点赞/取消点赞
     likeAction() {
-      userService.updateLikeState({articleId: this.$route.params.id})
-          .then(() => {
-            this.getArticleCountById();
-          })
-          .catch(err => {
-            this.$message.error(err.desc);
-          });
-    },
+      if (this.isLike) {
+        // 取消点赞
+        this.isLike = !this.isLike;
+        this.likeCount = this.likeCount > 0 ? this.likeCount - 1 : 0;
+        console.log("----> isLike = ", this.isLike, "  likeCount = ", this.likeCount);
+        return;
+      }
+      articleService.likeArticleById(this.$route.params.id)
+        .then(() => {
+          this.isLike = true;
+          this.likeCount = this.likeCount > 0 ? this.likeCount + 1 : 1;
+          console.log("isLike = ", this.isLike, "  likeCount = ", this.likeCount);
+        })
+        .catch(err => {
+          this.$message.error(err.desc);
+        });
+    }
   },
 
   mounted() {

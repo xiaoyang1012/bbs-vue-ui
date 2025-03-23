@@ -13,8 +13,8 @@
               <div class="foot-create" v-text="$utils.showtime(item.createdAt)"></div>
             </div>
           </div>
-          <div v-if="item && item.pic" class="article-content-right">
-            <img :src="item.pic" alt="" class="article-content-right">
+          <div v-if="item && item.pic" class="article-content-right" :style="{borderColor: $store.state.themeColor}">
+            <img :src="item.pic" alt="" class="img">
           </div>
         </div>
       </a-list-item>
@@ -174,11 +174,18 @@ export default {
   }
 
   .article-content-right {
-    width: 150px;
-    flex-shrink: 0; /* 禁止缩小 */
-    min-height: 70px;
-    background-color: green;
     border-radius: 5px;
+    width: 150px;
+    max-height: 100px;
+    border: #2c3e50 1.5px solid;
+  }
+
+  .article-content-right img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    object-fit: cover; /* 保持比例，裁剪多余部分 */
+    object-position: center; /* 可选：控制裁剪区域居中 */
   }
 }
 </style>
